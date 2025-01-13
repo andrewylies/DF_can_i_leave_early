@@ -7,7 +7,7 @@
 
         calendarEvents.forEach(event => {
             const parentDate = event.closest('.calendar-date');
-            if (parentDate && !parentDate.classList.contains('is-today')) { // 오늘 제외
+            if (parentDate && !parentDate.classList.contains('is-today')) {
                 const timeText = event.textContent.match(/총 업무시간 (\d+):(\d+)/);
                 if (timeText) {
                     const hours = parseInt(timeText[1], 10);
@@ -32,7 +32,7 @@
             }
         }
 
-        return (workDays - 1) * REQUIRED_HOURS_PER_DAY * 60; // 오늘 제외
+        return (workDays - 1) * REQUIRED_HOURS_PER_DAY * 60;
     }
 
     function displayMileage() {
@@ -45,22 +45,29 @@
         const sign = difference >= 0 ? '-' : '+';
         const color = difference >= 0 ? 'red' : 'blue';
 
-        const mileageDiv = document.createElement('div');
-        mileageDiv.className = 'column is-one-third-mobile';
-        mileageDiv.innerHTML = `
-            <div class="content" style="width:100%;">
-                <div class="is-size-7 has-text-centered is-vacation-title">
-                    현재 마일리지
+        let mileageDiv = document.querySelector('.current-mileage');
+        if (!mileageDiv) {
+            mileageDiv = document.createElement('div');
+            mileageDiv.className = 'column is-one-third-mobile current-mileage';
+            mileageDiv.innerHTML = `
+                <div class="content" style="width:100%;">
+                    <div class="is-size-7 has-text-centered is-vacation-title">
+                        현재 마일리지
+                    </div>
+                    <div class="title is-size-6 has-text-centered" style="color: ${color};">
+                        ${sign}${hours}시간 ${minutes}분
+                    </div>
                 </div>
-                <div class="title is-size-6 has-text-centered" style="color: ${color};">
-                    ${sign}${hours}시간 ${minutes}분
-                </div>
-            </div>
-        `;
+            `;
 
-        const parentElement = document.querySelector('.columns.is-mobile.is-multiline');
-        if (parentElement) {
-            parentElement.appendChild(mileageDiv);
+            const parentElement = document.querySelector('.columns.is-mobile.is-multiline');
+            if (parentElement) {
+                parentElement.appendChild(mileageDiv);
+            }
+        } else {
+            const titleElement = mileageDiv.querySelector('.title');
+            titleElement.textContent = `${sign}${hours}시간 ${minutes}분`;
+            titleElement.style.color = color;
         }
     }
 
