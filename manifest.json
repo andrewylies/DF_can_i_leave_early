@@ -9,6 +9,9 @@
     "48": "images/icon_48x48.png",
     "128": "images/icon_128x128.png"
   },
+  "host_permissions": [
+    "https://work.designfever.com/work/work_calendar.php"
+  ],
   "content_scripts": [
     {
       "js": ["scripts/content.js"],
