@@ -35,6 +35,51 @@
         return (workDays - 1) * REQUIRED_HOURS_PER_DAY * 60;
     }
 
+    function displayRemainingHours() {
+        const tagsContainers = document.querySelectorAll('div.tags');
+        tagsContainers.forEach(tagsContainer => {
+            const standardTimeElement = Array.from(tagsContainer.querySelectorAll('.tag')).find(el => el.textContent.includes('기준 근로시간'));
+            const totalTimeElement = Array.from(tagsContainer.querySelectorAll('.tag')).find(el => el.textContent.includes('총 근로시간'));
+
+            if (!standardTimeElement || !totalTimeElement) return;
+
+            const standardValueElement = standardTimeElement.nextElementSibling;
+            const totalValueElement = totalTimeElement.nextElementSibling;
+
+            if (!standardValueElement || !totalValueElement) return;
+
+            const [standardHours, standardMinutes] = standardValueElement.textContent.trim().split(':').map(Number);
+            const [totalHours, totalMinutes] = totalValueElement.textContent.trim().split(':').map(Number);
+
+            const standardTotalMinutes = standardHours * 60 + standardMinutes;
+            const totalWorkedMinutes = totalHours * 60 + totalMinutes;
+            const remainingMinutes = Math.max(0, standardTotalMinutes - totalWorkedMinutes);
+
+            const remainingHours = Math.floor(remainingMinutes / 60);
+            const remainingMins = remainingMinutes % 60;
+
+            let remainingHoursDiv = Array.from(tagsContainer.querySelectorAll('.tag')).find(el => el.textContent.includes('남은 최소 근로시간'));
+            if (!remainingHoursDiv) {
+                const newControlDiv = document.createElement('div');
+                newControlDiv.className = 'control';
+
+                newControlDiv.innerHTML = `
+                    <div class="tags has-addons">
+                        <span class="tag">남은 최소 근로시간</span>
+                        <span class="tag is-primary">${remainingHours} : ${remainingMins.toString().padStart(2, '0')}</span>
+                    </div>
+                `;
+
+                tagsContainer.appendChild(newControlDiv);
+            } else {
+                const remainingTimeElement = remainingHoursDiv.nextElementSibling;
+                if (remainingTimeElement) {
+                    remainingTimeElement.textContent = `${remainingHours} : ${remainingMins.toString().padStart(2, '0')}`;
+                }
+            }
+        });
+    }
+
     function displayMileage() {
         const totalMinutesWorked = getTotalWorkHours();
         const requiredMinutesWithoutToday = getRequiredWorkHours();
@@ -51,8 +96,8 @@
             mileageDiv.className = 'column is-one-third-mobile current-mileage';
             mileageDiv.innerHTML = `
                 <div class="content" style="width:100%;">
-                    <div class="is-size-7 has-text-centered is-vacation-title">
-                        현재 마일리지
+                    <div class="is-size-7 has-text-centered is-vacation-title" style="position: relative">
+                        마일리지 <span style="position:absolute; font-size: 0.5rem;padding-top: 0.2rem; opacity: 0.5">&nbsp;(금일 제외)</span>
                     </div>
                     <div class="title is-size-6 has-text-centered" style="color: ${color};">
                         ${sign}${hours}시간 ${minutes}분
@@ -72,4 +117,5 @@
     }
 
     displayMileage();
+    displayRemainingHours();
 })();
