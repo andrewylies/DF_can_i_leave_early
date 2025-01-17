@@ -36,49 +36,64 @@
     }
 
     function displayRemainingHours() {
-        const tagsContainers = document.querySelectorAll('div.tags');
-        tagsContainers.forEach(tagsContainer => {
-            const standardTimeElement = Array.from(tagsContainer.querySelectorAll('.tag')).find(el => el.textContent.includes('기준 근로시간'));
-            const totalTimeElement = Array.from(tagsContainer.querySelectorAll('.tag')).find(el => el.textContent.includes('총 근로시간'));
+        // 기준 근로시간과 총 근로시간 요소 찾기
+        const tags = document.querySelectorAll('.tags .tag');
 
-            if (!standardTimeElement || !totalTimeElement) return;
+        let standardTimeElement = null;
+        let totalTimeElement = null;
 
-            const standardValueElement = standardTimeElement.nextElementSibling;
-            const totalValueElement = totalTimeElement.nextElementSibling;
-
-            if (!standardValueElement || !totalValueElement) return;
-
-            const [standardHours, standardMinutes] = standardValueElement.textContent.trim().split(':').map(Number);
-            const [totalHours, totalMinutes] = totalValueElement.textContent.trim().split(':').map(Number);
-
-            const standardTotalMinutes = standardHours * 60 + standardMinutes;
-            const totalWorkedMinutes = totalHours * 60 + totalMinutes;
-            const remainingMinutes = Math.max(0, standardTotalMinutes - totalWorkedMinutes);
-
-            const remainingHours = Math.floor(remainingMinutes / 60);
-            const remainingMins = remainingMinutes % 60;
-
-            let remainingHoursDiv = Array.from(tagsContainer.querySelectorAll('.tag')).find(el => el.textContent.includes('남은 최소 근로시간'));
-            if (!remainingHoursDiv) {
-                const newControlDiv = document.createElement('div');
-                newControlDiv.className = 'control';
-
-                newControlDiv.innerHTML = `
-                    <div class="tags has-addons">
-                        <span class="tag">남은 최소 근로시간</span>
-                        <span class="tag is-primary">${remainingHours} : ${remainingMins.toString().padStart(2, '0')}</span>
-                    </div>
-                `;
-
-                tagsContainer.appendChild(newControlDiv);
-            } else {
-                const remainingTimeElement = remainingHoursDiv.nextElementSibling;
-                if (remainingTimeElement) {
-                    remainingTimeElement.textContent = `${remainingHours} : ${remainingMins.toString().padStart(2, '0')}`;
-                }
+        tags.forEach(tag => {
+            if (tag.textContent.includes('기준 근로시간')) {
+                standardTimeElement = tag;
+            }
+            if (tag.textContent.includes('총 근로시간')) {
+                totalTimeElement = tag;
             }
         });
+
+        if (!standardTimeElement || !totalTimeElement) return;
+
+        const standardValueElement = standardTimeElement.nextElementSibling;
+        const totalValueElement = totalTimeElement.nextElementSibling;
+
+        if (!standardValueElement || !totalValueElement) return;
+
+        const [standardHours, standardMinutes] = standardValueElement.textContent.trim().split(':').map(Number);
+        const [totalHours, totalMinutes] = totalValueElement.textContent.trim().split(':').map(Number);
+
+        const standardTotalMinutes = standardHours * 60 + standardMinutes;
+        const totalWorkedMinutes = totalHours * 60 + totalMinutes;
+        const remainingMinutes = Math.max(0, standardTotalMinutes - totalWorkedMinutes);
+
+        const remainingHours = Math.floor(remainingMinutes / 60);
+        const remainingMins = remainingMinutes % 60;
+
+        const tagsContainer = document.querySelector('div.field.is-grouped.is-grouped-multiline');
+        if (!tagsContainer) return;
+
+        const newControlDiv = document.createElement('div');
+        newControlDiv.className = 'control';
+
+        newControlDiv.innerHTML = `
+        <div class="tags has-addons">
+            <span class="tag">남은 기준 근로시간</span>
+            <span class="tag is-primary">${remainingHours} : ${remainingMins.toString().padStart(2, '0')}</span>
+        </div>
+    `;
+
+        const existingRemainingHours = Array.from(tagsContainer.querySelectorAll('.tag'))
+            .find(el => el.textContent.includes('남은 기준 근로시간'));
+        if (existingRemainingHours) {
+            existingRemainingHours.parentElement.parentElement.remove();
+        }
+
+        tagsContainer.appendChild(newControlDiv);
     }
+
+
+
+
+
 
     function displayMileage() {
         const totalMinutesWorked = getTotalWorkHours();
