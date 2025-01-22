@@ -14,6 +14,7 @@
                     const minutes = parseInt(timeText[2], 10);
                     totalMinutes += hours * 60 + minutes;
                 }
+
             }
         });
 
@@ -42,7 +43,6 @@
                     }
                 }
             });
-
             if (hasHalfDay && hasValidWorkTime) {
                 halfDayCount++;
             }
@@ -68,8 +68,10 @@
         }
 
         const halfDayCount = getHalfDayCount();
+
         const isTodayPresent = !!document.querySelector('.calendar-date.is-today');
         const adjustedWorkDays = isTodayPresent ? totalWorkDays - 1 - halfDayCount : totalWorkDays - halfDayCount;
+
         return (adjustedWorkDays * REQUIRED_HOURS_PER_DAY * 60) + (halfDayCount * 4 * 60);
     }
 
@@ -87,32 +89,37 @@
 
 
         const difference = requiredMinutesWithHalfDays - totalMinutesWorked;
-        const hours = Math.floor(Math.abs(difference) / 60);
-        const minutes = Math.abs(difference) % 60;
-        const sign = difference >= 0 ? '-' : '+';
-        const color = difference >= 0 ? 'red' : 'blue';
 
         let mileageDiv = document.querySelector('.current-mileage');
         if (!mileageDiv) {
             mileageDiv = document.createElement('div');
             mileageDiv.className = 'column is-one-third-mobile current-mileage';
             mileageDiv.innerHTML = `
-            <div class="content" style="width:100%;">
-                <div class="is-size-7 has-text-centered is-vacation-title" style="position: relative">
-                    마일리지 <span style="position:absolute; font-size: 0.5rem;padding-top: 0.2rem; opacity: 0.5">&nbsp;(금일 제외)</span>
-                </div>
-                <div class="title is-size-6 has-text-centered" style="color: ${color};">
-                    ${sign}${hours}시간 ${minutes}분
-                </div>
+        <div class="content" style="width:100%;">
+            <div class="is-size-7 has-text-centered is-vacation-title" style="position: relative">
+                마일리지 <span style="position:absolute; font-size: 0.5rem;padding-top: 0.2rem; opacity: 0.5">&nbsp;(금일 제외)</span>
             </div>
+            <div class="title is-size-6 has-text-centered"></div>
+        </div>
         `;
 
             const parentElement = document.querySelector('.columns.is-mobile.is-multiline');
             if (parentElement) {
                 parentElement.appendChild(mileageDiv);
             }
+        }
+
+        const titleElement = mileageDiv.querySelector('.title');
+
+        if (difference === 0) {
+            titleElement.textContent = '0시간 0분👍';
+            titleElement.style.color = 'green';
         } else {
-            const titleElement = mileageDiv.querySelector('.title');
+            const hours = Math.floor(Math.abs(difference) / 60);
+            const minutes = Math.abs(difference) % 60;
+            const sign = difference >= 0 ? '-' : '+';
+            const color = difference >= 0 ? 'red' : 'blue';
+
             titleElement.textContent = `${sign}${hours}시간 ${minutes}분`;
             titleElement.style.color = color;
         }
