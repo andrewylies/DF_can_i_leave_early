@@ -63,6 +63,10 @@
             }
         }
 
+        if (totalWorkDays <= 0) {
+            return 0;
+        }
+
         const halfDayCount = getHalfDayCount();
         const adjustedWorkDays = totalWorkDays - 1 - halfDayCount;
         return (adjustedWorkDays * REQUIRED_HOURS_PER_DAY * 60) + (halfDayCount * 4 * 60);
