@@ -74,8 +74,6 @@
         const totalMinutesWorked = getTotalWorkHours();
         const requiredMinutesWithHalfDays = getRequiredWorkHoursWithHalfDays();
 
-        console.log(totalMinutesWorked,requiredMinutesWithHalfDays);
-
         if (totalMinutesWorked === 0) {
             const mileageDiv = document.querySelector('.current-mileage');
             if (mileageDiv) {
@@ -181,4 +179,28 @@
 
     displayMileage();
     displayRemainingHours();
+    console.log(`
+   _____          _   _   _____             
+  / ____|   /\\   | \\ | | |_   _|            
+ | |       /  \\  |  \\| |   | |              
+ | |      / /\\ \\ | . \` |   | |              
+ | |____ / ____ \\| |\\  |  _| |_             
+  \\_____/_/____\\_\\_|_\\_| |_____|____        
+ | |    |  ____|   /\\ \\    / /  ____|       
+ | |    | |__     /  \\ \\  / /| |__          
+ | |    |  __|   / /\\ \\ \\/ / |  __|         
+ | |____| |____ / ____ \\  /  | |____        
+ |______|______/_/_   \\_\\/___|______|_____  
+ |  ____|   /\\   | |    |  __ \\ \\   / /__ \\ 
+ | |__     /  \\  | |    | |__) \\ \\_/ /   ) |
+ |  __|   / /\\ \\ | |    |  _  / \\   /   / / 
+ | |____ / ____ \\| |____| | \\ \\  | |   |_|  
+ |______/_/    \\_\\______|_|  \\_\\ |_|   (_)  
+
+ ------------------------------------------
+ v1.2.1
+ 📞 Support
+ https://github.com/andrewylies/DF_can_i_leave_early
+ ------------------------------------------
+`)
 })();
