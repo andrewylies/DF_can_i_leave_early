@@ -14,7 +14,6 @@
                     const minutes = parseInt(timeText[2], 10);
                     totalMinutes += hours * 60 + minutes;
                 }
-
             }
         });
 
@@ -52,24 +51,24 @@
     }
 
     function getRequiredWorkHoursWithHalfDays() {
-        const totalWorkDaysElement = Array.from(document.querySelectorAll('.is-vacation-title'))
-            .find(el => el.textContent.trim() === '근무일수');
+        const calendarDates = document.querySelectorAll('.calendar-date');
         let totalWorkDays = 0;
 
-        if (totalWorkDaysElement) {
-            const titleElement = totalWorkDaysElement.parentElement.querySelector('.title');
-            if (titleElement) {
-                totalWorkDays = parseInt(titleElement.textContent.trim(), 10) || 0;
-            }
-        }
+        calendarDates.forEach(date => {
+            const hasWorkTime = Array.from(date.querySelectorAll('.calendar-event')).some(event => {
+                return event.textContent.match(/총 업무시간 (\d+):(\d+)/);
+            });
 
-        if (totalWorkDays <= 0) {
-            return 0;
-        }
+            if (hasWorkTime && !date.classList.contains('is-today')) {
+                totalWorkDays++;
+            }
+        });
 
         const halfDayCount = getHalfDayCount();
 
         const isTodayPresent = !!document.querySelector('.calendar-date.is-today');
+
+        console.log(isTodayPresent,totalWorkDays,halfDayCount);
         const adjustedWorkDays = isTodayPresent ? totalWorkDays - 1 - halfDayCount : totalWorkDays - halfDayCount;
 
         return (adjustedWorkDays * REQUIRED_HOURS_PER_DAY * 60) + (halfDayCount * 4 * 60);
@@ -78,6 +77,8 @@
     function displayMileage() {
         const totalMinutesWorked = getTotalWorkHours();
         const requiredMinutesWithHalfDays = getRequiredWorkHoursWithHalfDays();
+
+        console.log(totalMinutesWorked,requiredMinutesWithHalfDays);
 
         if (totalMinutesWorked === 0) {
             const mileageDiv = document.querySelector('.current-mileage');
