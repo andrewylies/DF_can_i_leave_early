@@ -246,16 +246,16 @@
             if (isFirstRow) {
                 row.innerHTML = `
                     <span style="font-size:20px;width: 24.3px;margin-right: 10px; display: flex; justify-content: center; align-items: center">🕒</span>
-                    <input class="input calc-input calc-input_hh" type="number" value="0" min="0" max="999" step="1" style="width: 50px; margin-right: 5px;">
+                    <input class="input calc-input calc-input_hh" type="number" value="0" min="0" max="999" step="1" style="width: 60px; margin-right: 5px;">
                     <span style="margin-right: 5px;">:</span>
-                    <input class="input calc-input calc-input_mm" type="number" value="00" min="0" max="59" step="1" style="width: 50px;">
+                    <input class="input calc-input calc-input_mm" type="number" value="00" min="0" max="59" step="1" style="width: 60px;">
                 `;
             } else {
                 row.innerHTML = `
                     <button class="calc-time-row__sign" aria-label="+" type="button" style="margin-right: 10px;">+</button>
-                    <input class="input calc-input calc-input_hh" type="number" value="0" min="0" max="999" step="1" style="width: 50px; margin-right: 5px;">
+                    <input class="input calc-input calc-input_hh" type="number" value="0" min="0" max="999" step="1" style="width: 60px; margin-right: 5px;">
                     <span style="margin-right: 5px;">:</span>
-                    <input class="input calc-input calc-input_mm" type="number" value="00" min="0" max="59" step="1" style="width: 50px;">
+                    <input class="input calc-input calc-input_mm" type="number" value="00" min="0" max="59" step="1" style="width: 60px;">
                 `;
                 const signButton = row.querySelector('.calc-time-row__sign');
                 signButton.style.width = '24.3px';
