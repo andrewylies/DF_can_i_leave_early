@@ -177,9 +177,11 @@
         tagsContainer.appendChild(newControlDiv);
     }
 
-    displayMileage();
-    displayRemainingHours();
-    console.log(`
+    function displayVersionInfo() {
+        const manifest = chrome.runtime.getManifest();
+        const version = manifest.version;
+
+        console.log(`
    _____          _   _   _____             
   / ____|   /\\   | \\ | | |_   _|            
  | |       /  \\  |  \\| |   | |              
@@ -198,9 +200,14 @@
  |______/_/    \\_\\______|_|  \\_\\ |_|   (_)  
 
  ------------------------------------------
- v1.2.1
+ v${version}
  📞 Support
  https://github.com/andrewylies/DF_can_i_leave_early
  ------------------------------------------
-`)
+`);
+    }
+
+    displayMileage();
+    displayRemainingHours();
+    displayVersionInfo();
 })();
