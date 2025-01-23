@@ -274,40 +274,34 @@
 
             [hoursInput, minutesInput].forEach((input) => {
                 input.addEventListener('paste', (e) => {
-                    e.preventDefault(); // 기본 붙여넣기 동작 방지
+                    e.preventDefault();
 
                     const pasteData = e.clipboardData.getData('text').trim();
 
-                    // 다양한 시간 포맷에서 첫 번째 유효한 시간 추출
                     const regex = /(\d+)\s*(시간|h|:)\s*(\d+)?\s*([분m])?/i;
                     const match = pasteData.match(regex);
 
                     if (!match) {
-                        // 매칭되는 포맷이 없을 경우 아무 작업도 하지 않음
-                        console.warn('Invalid time format pasted:', pasteData);
                         return;
                     }
 
                     let hours = parseInt(match[1], 10) || 0;
                     let minutes = parseInt(match[3] || '0', 10);
 
-                    // 분이 59를 초과하는 경우 시간으로 변환
                     if (minutes > 59) {
                         hours += Math.floor(minutes / 60);
                         minutes %= 60;
                     }
 
-                    // 숫자를 2자리로 포맷
                     const formattedHours = String(hours).padStart(2, '0');
                     const formattedMinutes = String(minutes).padStart(2, '0');
 
-                    // 붙여넣기된 input에 따라 값 설정
                     if (input.classList.contains('calc-input_hh')) {
                         input.value = formattedHours;
-                        minutesInput.value = formattedMinutes; // 동반 분 필드 값 설정
+                        minutesInput.value = formattedMinutes;
                     } else if (input.classList.contains('calc-input_mm')) {
                         input.value = formattedMinutes;
-                        hoursInput.value = formattedHours; // 동반 시간 필드 값 설정
+                        hoursInput.value = formattedHours;
                     }
                 });
             });
