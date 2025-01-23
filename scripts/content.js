@@ -66,11 +66,7 @@
 
         const halfDayCount = getHalfDayCount();
 
-        const isTodayPresent = !!document.querySelector('.calendar-date.is-today');
-
-        console.log(isTodayPresent,totalWorkDays,halfDayCount);
-        const adjustedWorkDays = isTodayPresent ? totalWorkDays - 1 - halfDayCount : totalWorkDays - halfDayCount;
-
+        const adjustedWorkDays = totalWorkDays - halfDayCount;
         return (adjustedWorkDays * REQUIRED_HOURS_PER_DAY * 60) + (halfDayCount * 4 * 60);
     }
 
