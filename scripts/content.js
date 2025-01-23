@@ -72,6 +72,39 @@
 
     // 마일리지 출력
     function displayMileage() {
+        const tags = document.querySelectorAll('.tags .tag');
+
+        if (tags.length > 0) {
+            document.querySelector('.total-work-time')?.remove();
+        } else {
+            const totalMinutesWorked = getTotalWorkHours();
+
+            const totalHoursWorked = Math.floor(totalMinutesWorked / 60);
+            const totalMinutesWorkedRemainder = totalMinutesWorked % 60;
+
+            let totalWorkTimeDiv = document.querySelector('.total-work-time');
+            if (!totalWorkTimeDiv) {
+                totalWorkTimeDiv = document.createElement('div');
+                totalWorkTimeDiv.className = 'column is-one-third-mobile total-work-time';
+                totalWorkTimeDiv.innerHTML = `
+                <div class="content" style="width:100%;">
+                    <div class="is-size-7 has-text-centered is-vacation-title" style="position: relative">
+                        총 근로시간 <span style="position:absolute; font-size: 0.5rem;padding-top: 0.2rem; opacity: 0.5">&nbsp;(금일 제외)</span>
+                    </div>
+                    <div class="title is-size-6 has-text-centered"></div>
+                </div>
+            `;
+                const parentElement = document.querySelector('.columns.is-mobile.is-multiline');
+                if (parentElement) {
+                    parentElement.append(totalWorkTimeDiv);
+                }
+            }
+
+            const totalWorkTitleElement = totalWorkTimeDiv.querySelector('.title');
+            totalWorkTitleElement.textContent = `${totalHoursWorked}시간 ${totalMinutesWorkedRemainder}분`;
+            totalWorkTitleElement.style.color = '#333';
+        }
+
         const totalMinutesWorked = getTotalWorkHours();
         const requiredMinutesWithHalfDays = getRequiredWorkHoursWithHalfDays();
 
@@ -88,12 +121,13 @@
             updateMileageTitle(titleElement, '0시간 0분👍', 'green');
         } else {
             const hours = Math.floor(Math.abs(difference) / 60);
-            const minutes = Math.abs(difference) % 60;
+            const minutes = Math.abs(difference % 60);
             const sign = difference >= 0 ? '-' : '+';
             const color = difference >= 0 ? 'red' : 'blue';
             updateMileageTitle(titleElement, `${sign}${hours}시간 ${minutes}분`, color);
         }
     }
+
 
     // 마일리지 DOM 생성
     function createMileageDiv() {
