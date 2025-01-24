@@ -267,8 +267,10 @@
         calculator.style.marginTop = '10px';
 
         calculator.innerHTML = `
-            <h3 style="text-align: center; font-size: 18px; font-weight: bold; margin-bottom: 10px;">시간 계산기</h3>
+            <h3 style="text-align: center; font-size: 18px; font-weight: bold; margin-bottom: 5px;">시간 계산기</h3>
             <div class="calc__inter-col calc-inter-col">
+                <p style="font-size: 10px;opacity: 0.5;font-weight: 400;font-style: italic;margin-bottom: 20px;">&#8227; ‘총 업무시간 08:19’ 또는 ‘-0시간 24분’과 같은 텍스트를 복사하여 입력란에 붙여넣으시면, 지정된 포맷에 따라 자동으로 처리됩니다.</p>
+                <div style="display: flex;margin-left: 35px;gap:15px;"><span style="display: block;width: 60px">HH</span><span style="display: block;width: 60px;">MM</span></div>
                 <div class="calc-inter-col__input-rows"></div>
                 <button class="btn calc-inter-col__add-btn" type="button" style="cursor:pointer;padding: calc(0.375em - 1px) 0.75em;width: 100%; margin-top: 10px;background-color: #4880db;border: none; border-radius: 4px; color: white;">줄 추가</button>
                 <button class="btn calc-inter-col__reset-btn" type="button" style="cursor:pointer;padding: calc(0.375em - 1px) 0.75em;width: 100%; margin-top: 5px;background-color: #ff3860;border: none; border-radius: 4px; color: white;">초기화</button>
@@ -351,23 +353,24 @@
 
                     const pasteData = e.clipboardData.getData('text').trim();
 
-                    const regex = /(\d+)\s*(시간|h|:)\s*(\d+)?\s*([분m])?/i;
+                    const regex = /(-?)(\d+)\s*(시간|h|:)\s*(\d+)?\s*([분m])?/i;
                     const match = pasteData.match(regex);
 
                     if (!match) {
                         return;
                     }
 
-                    let hours = parseInt(match[1], 10) || 0;
-                    let minutes = parseInt(match[3] || '0', 10);
+                    let isNegative = match[1] === '-';
+                    let hours = parseInt(match[2], 10) || 0;
+                    let minutes = parseInt(match[4] || '0', 10);
 
                     if (minutes > 59) {
                         hours += Math.floor(minutes / 60);
                         minutes %= 60;
                     }
 
-                    const formattedHours = String(hours).padStart(2, '0');
-                    const formattedMinutes = String(minutes).padStart(2, '0');
+                    const formattedHours = String(hours);
+                    const formattedMinutes = String(minutes);
 
                     if (input.classList.contains('calc-input_hh')) {
                         input.value = formattedHours;
@@ -375,6 +378,12 @@
                     } else if (input.classList.contains('calc-input_mm')) {
                         input.value = formattedMinutes;
                         hoursInput.value = formattedHours;
+                    }
+
+                    // 부호 버튼 설정
+                    const signButton = row.querySelector('.calc-time-row__sign');
+                    if (signButton) {
+                        signButton.textContent = isNegative ? '-' : '+';
                     }
                 });
             });
@@ -420,7 +429,11 @@
         createInputRow(true);
         createInputRow(false);
 
-        addButton.addEventListener('click', () => createInputRow(false));
+        addButton.addEventListener('click', () => {
+            for (let i = 0; i < 5; i++) {
+                createInputRow(false);
+            }
+        });
         calculateButton.addEventListener('click', calculateTotalTime);
         resetButton.addEventListener('click', resetCalculator);
     }
