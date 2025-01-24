@@ -90,7 +90,7 @@
                 totalWorkTimeDiv.innerHTML = `
                 <div class="content" style="width:100%;">
                     <div class="is-size-7 has-text-centered is-vacation-title" style="position: relative">
-                        총 근로시간 <span style="position:absolute; font-size: 0.5rem;padding-top: 0.2rem; opacity: 0.5">&nbsp;(금일 제외)</span>
+                        총 근로시간
                     </div>
                     <div class="title is-size-6 has-text-centered"></div>
                 </div>
@@ -154,11 +154,13 @@
             toggleBtn.className = 'is-add-today-btn';
             toggleBtn.innerHTML = disabledText;
             toggleBtn.style.cssText = baseStyle + disabledStyle;
+            toggleBtn.style.fontWeight = 'bold';
             toggleBtn.onclick = (e) => {
                 e.preventDefault();
                 ADD_TODAY = !ADD_TODAY;
                 toggleBtn.style.cssText = baseStyle + (ADD_TODAY ? activeStyle : disabledStyle);
                 toggleBtn.innerHTML = ADD_TODAY ? activeText : disabledText;
+                toggleBtn.style.fontWeight = 'bold';
                 displayMileage();
             }
             parentElement.after(toggleBtn);
@@ -173,7 +175,7 @@
         mileageDiv.innerHTML = `
             <div class="content" style="width:100%;">
                 <div class="is-size-7 has-text-centered is-vacation-title" style="position: relative">
-                    마일리지 <span style="position:absolute; font-size: 0.5rem;padding-top: 0.2rem; opacity: 0.5">&nbsp;(금일 제외)</span>
+                    마일리지
                 </div>
                 <div class="title is-size-6 has-text-centered"></div>
             </div>
