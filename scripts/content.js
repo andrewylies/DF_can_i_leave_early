@@ -1,5 +1,6 @@
 (function () {
     const REQUIRED_HOURS_PER_DAY = 8;
+    let ADD_TODAY = false;
 
     // 총 업무시간 파싱
     function parseTime(text) {
@@ -20,7 +21,7 @@
 
         events.forEach(event => {
             const parentDate = event.closest('.calendar-date');
-            if (parentDate && !parentDate.classList.contains('is-today')) {
+            if (parentDate && (ADD_TODAY || !parentDate.classList.contains('is-today'))) {
                 const time = parseTime(event.textContent);
                 totalMinutes += calculateMinutes(time);
             }
@@ -59,7 +60,7 @@
                 return event.textContent.match(/총 업무시간 (\d+):(\d+)/);
             });
 
-            if (hasValidWorkTime && !date.classList.contains('is-today')) {
+            if (hasValidWorkTime && (ADD_TODAY || !date.classList.contains('is-today'))) {
                 totalWorkDays++;
             }
         });
@@ -125,6 +126,42 @@
             const sign = difference >= 0 ? '-' : '+';
             const color = difference >= 0 ? 'red' : 'blue';
             updateMileageTitle(titleElement, `${sign}${hours}시간 ${minutes}분`, color);
+        }
+    }
+
+    function addToggleAddTodayBtn(){
+        let hasIsToday = false;
+        const parentElement = document.querySelector('.is-multiline').parentElement;
+        const events = document.querySelectorAll('.calendar-event.is-warning');
+
+        events.forEach(event => {
+            if (hasIsToday) return;
+            const parentDate = event.closest('.calendar-date');
+            if (parentDate && (parentDate.classList.contains('is-today'))) {
+                hasIsToday = true;
+            }
+        });
+
+        if (!hasIsToday) return;
+
+        if(parentElement) {
+            const toggleBtn = document.createElement('button');
+            const baseStyle =`display:block; width:100%; margin-bottom:1.5rem; padding:10px 0; border-radius:6px; cursor:pointer;`;
+            const activeStyle =`border:1px solid #23d160; background:#23d160; color:#fff;`;
+            const disabledStyle =`border:1px dashed #dbdbdb; background:#f5f5f5; color:#888585;`;
+            const activeText = '📅 오늘 포함 계산';
+            const disabledText = '🚫 오늘 미포함 계산';
+            toggleBtn.className = 'is-add-today-btn';
+            toggleBtn.innerHTML = disabledText;
+            toggleBtn.style.cssText = baseStyle + disabledStyle;
+            toggleBtn.onclick = (e) => {
+                e.preventDefault();
+                ADD_TODAY = !ADD_TODAY;
+                toggleBtn.style.cssText = baseStyle + (ADD_TODAY ? activeStyle : disabledStyle);
+                toggleBtn.innerHTML = ADD_TODAY ? activeText : disabledText;
+                displayMileage();
+            }
+            parentElement.after(toggleBtn);
         }
     }
 
@@ -422,4 +459,5 @@
     displayRemainingHours();
     createTimeCalculator();
     displayVersionInfo();
+    addToggleAddTodayBtn();
 })();
