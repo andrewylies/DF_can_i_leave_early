@@ -229,6 +229,24 @@
         container.appendChild(newDiv);
     }
 
+    //야간근로 계산 추가
+    /*function getNightWorkTime(){
+        const calendarBox = document.querySelectorAll('.calendar-body .calendar-date:not(.is-holiday):not(.is-vacation):not(.is-disabled)');
+
+        const total = Array.from(calendarBox).map((item)=>{
+            const target = item.querySelector('.is-light:last-of-type');
+            if(target){
+                const [hour, minutes] = item.querySelector('.is-light:last-of-type').innerText.trim().split('~')[1].split(':').map(Number);
+                return (hour*60+minutes) - 1320;
+            }
+            return 0;
+        }).filter(totalMinutes => totalMinutes > 0);
+
+        const sum = total.reduce((acc, curr)=> acc+curr, 0);
+
+        console.log(total,'  total => ',Math.floor(sum / 60),':',sum%60);
+    }*/
+
     // 시간 계산기 추가
     function createTimeCalculator() {
         const calculatorWrapper = document.createElement('div');
